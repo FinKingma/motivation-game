@@ -6,15 +6,42 @@ describe('motivation game', () => {
     expect(motivation.strength).toBe(100);
   })
 })
-// specs
-// 1. internalization polarizes between 0 (externalised) and 1 (internalized)
+/* new functionality
+- add new factor desiredMotivationStrength
+- intrinsic motivation always triggers higher internalization, but possibly negative motivation strength
 
-// 2. external motivation drastically pulls your internalization till 0, but also greatly heightens your temporary strength
-// 3. introjected motivations pulls your internalization till 0.2, but also heightens your temporary strength
-// 4. identified motivations pulls your internalization till 0.5 and heightens your temporary strength
-// 5. integrated motivation pulls your internalization to 0.8
-// 6. intrinsic motivation slowly pulls your internalization 1 when idle (not other interactions for 5 seconds)
+*/
 
-// 7. the longer you press the action button, the stronger the effect will be
-// 8. the last 50 strength positions are remembers and leave a trail to show progress
-// 9. occasionally stars pop up and can be caught for points (by having the right strength at that moment)
+/*
+
+You will draw once your motivation is greater than the things preventing you from it
+
+task motivation (whether or not you want to do this task)
+- you have an intrinsic motivation for every task that cannot be altered (i.e. drawing = 80)
+- your task motivation will be based on your intrinsic task motivation and internalisation
+    when your motivation is fully internalised, your task motivation is equal to your intrinsic task motivation
+    when your motivation is fully externalised, your task motivation is 0
+
+motivation strength (the amount of motivation to do a specific task)
+- your motivation strength starts based on your task motivation
+- when an external motivation type is triggered, your motivation strength will be temporarily increased
+    external greatly increases strength
+    etc...
+- over time your motivation strength will return to your task motivation
+- the longer you hold your trigger, the greater the impact on your motivation strength
+- the longer you do not use your triggers, the greater the impact on your motivation strength
+
+internalisation (the amount of motivation that comes from yourself)
+- triggering the different types of motivation will affect your internalization:
+    external motivation can reduce your internalization completely
+    introjected motivations pulls your internalization to 0.2
+    identified motivations pulls your internalization to 0.5
+    integrated motivation pulls your internalization to 0.8
+- intrinsic motivation slowly replenishes your internalization while idle
+- the longer you hold your trigger, the greater the impact on your internalisation
+- the longer you do not use your triggers, the greater the impact on your internalisation
+
+blockades (everything that is preventing you from being motivated)
+- if your motivation strength exceeds your blockades, you are motivated for that task
+- over time, new things happen which impact your current blockades
+*/

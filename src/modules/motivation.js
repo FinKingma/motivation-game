@@ -4,22 +4,27 @@ import Texts from './texts'
 
 function Motivation () {
   this.strength = 40
-  this.internalization = 0.8
-  this.triggerEffect = 0
   this.strHistory = []
   this.blocks = 60
+  this.blockHistory = []
+  this.internalization = 0.7
+  this.triggerEffect = 0
   this.levels = new Levels().levels
   this.externalStrength = 0
   this.introjectStrength = 0
   this.identifyStrength = 0
   this.integrateStrength = 0
   this.score = 0
+  this.motivated = false
   this.texts = new Texts()
-  this.text = '"Gebruik de toetsen 1 t/m 4 om haar te motiveren om te tekenen, zolang haar motivatie boven de groene streep staat, is ze gemotiveerd!"'
+  this.textSarah = '...'
+  this.textYou = '...'
+  this.blockText = '...'
 
-  this.start = (canvas) => {
+  this.start = (canvas, blockBubble) => {
     setInterval(this.run, 1000 / this.levels.fps)
-    this.drawer = new Drawer(canvas)
+    setTimeout(newBlock, this.levels.blockFrequency)
+    this.drawer = new Drawer(canvas, blockBubble)
   }
   this.run = () => {
     raiseCharges()
@@ -28,9 +33,9 @@ function Motivation () {
     addHistory()
     addPoints()
     this.drawer.redrawContext()
+    this.drawer.drawBlocks(this.blockHistory, this.blockText)
     this.drawer.drawHistory(this.strHistory)
-    this.drawer.drawCircle(this.strength, this.blocks)
-    this.drawer.drawBlocks(this.blocks)
+    this.drawer.drawMotivation(this.strength, this.blockHistory, this.motivated)
   }
   this.externalCharge = () => {
     if (this.externalStrength === 0) {
@@ -40,7 +45,7 @@ function Motivation () {
   this.externalExecute = () => {
     raiseStrength(this.levels.external.raiseStrength, this.externalStrength)
     pullInternalization(this.levels.external.pullInternalization, this.levels.external.pullStrength)
-    sayText(this.texts.actor, this.texts.external)
+    youSay(this.texts.external)
     this.externalStrength = 0
     resetTrigger()
   }
@@ -52,7 +57,7 @@ function Motivation () {
   this.introjectExecute = () => {
     raiseStrength(this.levels.introjected.raiseStrength, this.introjectStrength)
     pullInternalization(this.levels.introjected.pullInternalization, this.levels.introjected.pullStrength)
-    sayText(this.texts.actor, this.texts.introjected)
+    youSay(this.texts.introjected)
     this.introjectStrength = 0
     resetTrigger()
   }
@@ -64,7 +69,7 @@ function Motivation () {
   this.identifyExecute = () => {
     raiseStrength(this.levels.identified.raiseStrength, this.identifyStrength)
     pullInternalization(this.levels.identified.pullInternalization, this.levels.identified.pullStrength)
-    sayText(this.texts.actor, this.texts.identified)
+    youSay(this.texts.identified)
     this.identifyStrength = 0
     resetTrigger()
   }
@@ -76,7 +81,7 @@ function Motivation () {
   this.integrateExecute = () => {
     raiseStrength(this.levels.integrated.raiseStrength, this.integrateStrength)
     pullInternalization(this.levels.integrated.pullInternalization, this.levels.integrated.pullStrength)
-    sayText(this.texts.actor, this.texts.integrated)
+    youSay(this.texts.integrated)
     this.integrateStrength = 0
     resetTrigger()
   }
@@ -85,18 +90,28 @@ function Motivation () {
     let chosenIntrinsic = this.levels.intrinsic.pullInternalization[chosenIntrinsicNr]
     pullInternalization(chosenIntrinsic, this.levels.intrinsic.pullStrength)
     if (chosenIntrinsic > this.levels.internalizationBase) {
-      sayText(this.texts.actor, this.texts.intrinsicPositive)
+      sarahSays(this.texts.intrinsicPositive)
     } else {
-      sayText(this.texts.actor, this.texts.intrinsicNegative)
+      sarahSays(this.texts.intrinsicNegative)
     }
-    resetTrigger()
+  }
+  var newBlock = () => {
+    let i = Math.floor(Math.random() * this.levels.blocks.length)
+    this.blockText = this.levels.blocks[i].text
+    this.blocks = this.levels.blocks[i].block
+    this.blockBubbleTop = 430 - (this.blocks * 4.5)
+    let newTimeout = Math.floor(Math.random() * this.levels.blockFrequencyOffset) + this.levels.blockFrequency
+    setTimeout(newBlock, newTimeout)
   }
   var resetTrigger = () => {
     this.triggerEffect = 0
   }
   var addPoints = () => {
-    if (this.strength > this.blocks) {
+    if (this.blockHistory.length > 21 && this.strength > this.blockHistory[21]) {
+      this.motivated = true
       this.score++
+    } else {
+      this.motivated = false
     }
   }
   var raiseCharges = () => {
@@ -114,18 +129,20 @@ function Motivation () {
     }
   }
   var raiseTriggerEffect = () => {
-    if (this.triggerEffect <= this.levels.maxTriggerEffect) {
-      this.triggerEffect += this.levels.triggerGain
-    }
+    this.triggerEffect += this.levels.triggerGain
     this.triggerEffect = Number((this.triggerEffect).toFixed(2))
-    if (this.triggerEffect % this.levels.intrinsicKickIn === 0) {
+    if (this.triggerEffect % this.levels.intrinsicKickIn === 0 && this.motivated) {
       this.intrinsicExecute()
     }
   }
   var raiseStrength = (amount, triggerStrength) => {
-    amount *= this.triggerEffect
+    amount *= Math.min(this.triggerEffect, 5)
     amount *= 1 + (triggerStrength / 50)
     this.strength += amount
+    // let offset = (this.internalization * 100) - this.strength
+    // let adjustment = offset * Math.min((this.triggerEffect), 0.1)
+    // console.log(adjustment)
+    // this.strength += adjustment
     if (this.strength > this.levels.maxStrength) {
       this.strength = this.levels.maxStrength
     } else if (this.strength < this.levels.minStrength) {
@@ -134,8 +151,12 @@ function Motivation () {
   }
   var addHistory = () => {
     this.strHistory.unshift(this.strength)
-    if (this.strHistory.length >= 100) {
+    if (this.strHistory.length >= 42) {
       this.strHistory.pop()
+    }
+    this.blockHistory.unshift(this.blocks)
+    if (this.blockHistory.length >= 42) {
+      this.blockHistory.pop()
     }
   }
   var pullInternalization = (level, pullStrength) => {
@@ -150,10 +171,17 @@ function Motivation () {
     }
     return internalizationChange
   }
-  var sayText = (actor, texts) => {
+  var youSay = (texts) => {
     let chosenTextNr = Math.floor(Math.random() * texts.length)
     let chosenText = texts[chosenTextNr]
-    this.text = actor + ': "' + chosenText + '"'
+    this.textYou = '"' + chosenText + '"'
+    this.textSarah = '...'
+  }
+  var sarahSays = (texts) => {
+    let chosenTextNr = Math.floor(Math.random() * texts.length)
+    let chosenText = texts[chosenTextNr]
+    this.textSarah = '"' + chosenText + '"'
+    this.textYou = '...'
   }
 }
 

@@ -26,11 +26,16 @@
         <h2>points: {{ motivation.score }} </h2>
       </div>
       <div id='rightPane'>
+        <img src='../assets/sarah.png' class='sarah-image' />
+        <div class='bubble sarah'>{{ motivation.textSarah }}</div>
+        <div class='internalization'>
+          <div class='internalizationFill' v-bind:style="{ height: ( (1 - motivation.internalization) * 100) + '%'}" />
+          <p class='internalizationLabel'>internalization</p>
+        </div>
+        <img src='../assets/jij.png' class='jij-image' />
+        <div class='bubble jij'>{{ motivation.textYou }}</div>
         <canvas id='canvasField' ref="canvasField" />
       </div>
-    </div>
-    <div id='footer'>
-      <h2>{{ motivation.text }}</h2>
     </div>
   </div>
 </template>

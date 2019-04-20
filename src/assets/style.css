@@ -25,6 +25,66 @@ hr {
   height: 5px;
 }
 
+.bubble {
+	position: absolute;
+  background: #8053bb;
+  left: 800px;
+  top: 100px;
+  width: 150px;
+  border-radius: .4em;
+  color: white;
+  padding:5px;
+}
+
+.sarah.bubble {
+  left: 230px;
+  top: 450px;
+  width: 300px;
+}
+.sarah-image {
+  position: absolute;
+  left: 200px;
+  top: 300px;
+  height: 200px;
+}
+
+.internalization {
+  background: linear-gradient( green 0%, orange 40%, red 60%);
+  position: absolute;
+  left: 240px;
+  top: 350px;
+  height: 100px;
+  width: 15px;
+}
+.internalizationFill {
+  position: absolute;
+  background-color: black;
+  width: 100%;
+}
+.internalizationLabel {
+  position: absolute;
+  -webkit-transform: rotate(-90deg);
+  -moz-transform: rotate(-90deg);
+  -ms-transform: rotate(-90deg);
+  -o-transform: rotate(-90deg);
+  filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+  left: -50px;
+  top: +35px;
+  font-size: 10pt;
+}
+
+.jij.bubble {
+  left: 600px;
+  top: 450px;
+  width: 300px;
+}
+.jij-image {
+  position: absolute;
+  left: 800px;
+  top: 300px;
+  height: 200px;
+}
+
 #footer {
   background-color: orange;
   top: 500px;
@@ -37,9 +97,9 @@ hr {
 #leftPane {
   width:179px;
   background-color: lightgrey;
-  height: 400px;
+  height: 500px;
   text-align: left;
-  padding: 5px 10px;
+  padding: 0px 10px;
   border-right: 1px solid black;
 }
 
