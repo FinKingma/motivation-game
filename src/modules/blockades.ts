@@ -16,7 +16,7 @@ export class Blockades {
   updateNewBlock () :any {
     let i = Math.floor(Math.random() * this.potentialBlocks.length)
     console.log('test: ' + this.potentialBlocks[i].text)
-    this.currentBlock = 2
+    this.currentBlock = this.potentialBlocks[i].value
     setTimeout(this.updateNewBlock, this.newTimeout())
   }
   newTimeout () {
