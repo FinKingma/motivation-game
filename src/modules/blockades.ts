@@ -1,20 +1,21 @@
 'use strict'
-// import texts from '../assets/texts.json'
+var json = require('../texts/blocks.json');
 
 export class Blockades {
   currentBlock:number
-  // potentialBlocks:[]
+  potentialBlocks:any
 
   constructor () {
     this.currentBlock = 1
-    // this.potentialBlocks = texts.blockades
+    this.potentialBlocks = json
+    setTimeout(this.updateNewBlock(), this.newTimeout())
   }
-  // setTimeout(updateNewBlock, newTimeout)
   setBlock (value:number) {
     this.currentBlock = value
   }
-  updateNewBlock () {
-    // let i = Math.floor(Math.random() * this.potentialBlocks.length)
+  updateNewBlock () :any {
+    let i = Math.floor(Math.random() * this.potentialBlocks.length)
+    console.log('test: ' + this.potentialBlocks[i].text)
     this.currentBlock = 2
     setTimeout(this.updateNewBlock, this.newTimeout())
   }

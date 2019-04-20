@@ -12,7 +12,6 @@ export class TaskMotivation {
     this.taskName = name
     this.value = initialValue
     this.internalization = internalization
-    console.log(this.internalization.value)
     setInterval(this.revertTaskMotivation, 25)
   }
 

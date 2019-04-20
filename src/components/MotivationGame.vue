@@ -53,36 +53,37 @@ export default Vue.extend({
         }
     },
     beforeMount(){
+        setInterval(this.automaticChargeUp, 25)
         document.addEventListener('keydown', (event) => {
             switch (event.which) {
                 case 49:
-                this.externalCharge()
-                break
+                    this.externalCharge()
+                    break
                 case 50:
-                this.introjectCharge()
-                break
+                    this.introjectCharge()
+                    break
                 case 51:
-                this.identifyCharge()
-                break
+                    this.identifyCharge()
+                    break
                 case 52:
-                this.integrateCharge()
-                break
+                    this.integrateCharge()
+                    break
             }
-            })
-            document.addEventListener('keyup', (event) => {
+        })
+        document.addEventListener('keyup', (event) => {
             switch (event.which) {
                 case 49:
-                this.externalExecute()
-                break
+                    this.externalExecute()
+                    break
                 case 50:
-                this.introjectExecute()
-                break
+                    this.introjectExecute()
+                    break
                 case 51:
-                this.identifyExecute()
-                break
+                    this.identifyExecute()
+                    break
                 case 52:
-                this.integrateExecute()
-                break
+                    this.integrateExecute()
+                    break
             }
         })
     },
