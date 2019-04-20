@@ -1,0 +1,12 @@
+{
+  "external": [
+    "blaat",
+    "blaat2"
+  ],
+  "blockades": [
+    {
+      "text": "my cat died!",
+      "value": 30
+    }
+  ]
+}

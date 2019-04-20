@@ -8,51 +8,54 @@
         <ul>
           <li>
             <button @mousedown="externalCharge" @mouseup="externalExecute" @mouseleave="externalExecute">1) forceer</button>
-            <hr align=left class='motivatorLine' v-bind:style="{ width: motivation.externalStrength + '%'}">
+            <hr align=left class='motivatorLine' v-bind:style="{ width: externalChargeValue + '%'}">
           </li>
           <li>
             <button @mousedown="introjectCharge" @mouseup="introjectExecute" @mouseleave="introjectExecute">2) Voer druk uit</button>
-            <hr align=left class='motivatorLine' v-bind:style="{ width: motivation.introjectStrength + '%'}">
+            <hr align=left class='motivatorLine' v-bind:style="{ width: introjectChargeValue + '%'}">
           </li>
           <li>
             <button @mousedown="identifyCharge" @mouseup="identifyExecute" @mouseleave="identifyExecute">3) Vraag het</button>
-            <hr align=left class='motivatorLine' v-bind:style="{ width: motivation.identifyStrength + '%'}">
+            <hr align=left class='motivatorLine' v-bind:style="{ width: identifyChargeValue + '%'}">
           </li>
           <li>
-            <button @mousedown="introjectCharge" @mouseup="introjectExecute" @mouseleave="introjectExecute">4) Daag uit</button>
-            <hr align=left class='motivatorLine' v-bind:style="{ width: motivation.integrateStrength + '%'}">
+            <button @mousedown="integrateCharge" @mouseup="integrateExecute" @mouseleave="integrateExecute">4) Daag uit</button>
+            <hr align=left class='motivatorLine' v-bind:style="{ width: integrateChargeValue + '%'}">
           </li>
         </ul>
-        <h2>points: {{ motivation.score }} </h2>
+        <h2>points: {{ motivationService.score }} </h2>
       </div>
       <div id='rightPane'>
         <img src='../assets/sarah.png' class='sarah-image' />
-        <div class='bubble sarah'>{{ motivation.textSarah }}</div>
         <div class='internalization'>
-          <div class='internalizationFill' v-bind:style="{ height: ( (1 - motivation.internalization) * 100) + '%'}" />
+          <div class='internalizationFill' v-bind:style="{ height: ( (1 - motivationService.internalization.value) * 100) + '%'}" />
           <p class='internalizationLabel'>internalization</p>
         </div>
         <img src='../assets/jij.png' class='jij-image' />
-        <div class='bubble jij'>{{ motivation.textYou }}</div>
         <canvas id='canvasField' ref="canvasField" />
       </div>
     </div>
   </div>
 </template>
 
-<script>
-import Motivation from '@/modules/motivation'
+<script lang="ts">
+import { MotivationService } from '../modules/motivationService'
 
 export default {
   name: 'MotivationGame',
   data () {
     return {
-      motivation: new Motivation()
+      motivationService: new MotivationService(),
+      externalChargeValue: 0,
+      introjectChargeValue: 0,
+      identifyChargeValue: 0,
+      integrateChargeValue: 0
     }
   },
   mounted () {
-    let canvas = this.$refs.canvasField
-    this.motivation.start(canvas)
+    setInterval(this.automaticChargeUp, 25)
+
+    // let canvas = this.$refs.canvasField
     document.addEventListener('keydown', (event) => {
       switch (event.which) {
         case 49:
@@ -87,29 +90,58 @@ export default {
     })
   },
   methods: {
+    shouldBeCharged (value) {
+      return value > 0 && value < 100
+    },
+    automaticChargeUp () {
+      if (this.shouldBeCharged(this.externalChargeValue)) {
+        this.externalChargeValue++
+      }
+      if (this.shouldBeCharged(this.introjectChargeValue)) {
+        this.introjectChargeValue++
+      }
+      if (this.shouldBeCharged(this.identifyChargeValue)) {
+        this.identifyChargeValue++
+      }
+      if (this.shouldBeCharged(this.integrateChargeValue)) {
+        this.integrateChargeValue++
+      }
+    },
     externalCharge () {
-      this.motivation.externalCharge()
+      this.externalChargeValue = 1
     },
     externalExecute () {
-      this.motivation.externalExecute()
+      if (this.externalChargeValue > 0) {
+        this.motivationService.triggerExternal(this.externalChargeValue)
+        this.externalChargeValue = 0
+      }
     },
     introjectCharge () {
-      this.motivation.introjectCharge()
+      this.introjectChargeValue = 1
     },
     introjectExecute () {
-      this.motivation.introjectExecute()
+      if (this.introjectChargeValue > 0) {
+        this.motivationService.triggerIntrojected(this.introjectChargeValue)
+        this.introjectChargeValue = 0
+      }
     },
     identifyCharge () {
-      this.motivation.identifyCharge()
+      this.identifyChargeValue = 1
     },
     identifyExecute () {
-      this.motivation.identifyExecute()
+      if (this.identifyChargeValue > 0) {
+        this.motivationService.triggerIdentified(this.identifyChargeValue)
+        this.identifyChargeValue = 0
+      }
     },
     integrateCharge () {
-      this.motivation.integrateCharge()
+      this.integrateChargeValue = 1
     },
     integrateExecute () {
-      this.motivation.integrateExecute()
+      if (this.integrateChargeValue > 0) {
+        this.motivationService.triggerIntegrated(this.integrateChargeValue)
+        this.integrateChargeValue = 0
+      }
     }
   }
 }
